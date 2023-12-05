@@ -1,13 +1,13 @@
 #ifdef USE_ARDUINO
 
 #include "ddp.h"
-#include "ddp_light_effect.h"
+#include "ddp_basic_light_effect.h"
 #include "esphome/core/log.h"
 
 namespace esphome {
 namespace ddp {
 
-static const char *const TAG = "ddp_light_effect";
+static const char *const TAG = "ddp_basic_light_effect";
 
 DDPBasicLightEffect::DDPBasicLightEffect(const std::string &name) : LightEffect(name) {}
 
