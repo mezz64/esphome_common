@@ -4,6 +4,7 @@ from esphome.components.light.types import AddressableLightEffect, LightEffect
 from esphome.components.light.effects import (
     register_addressable_effect,
     register_rgb_effect,
+    register_binary_effect,
 )
 from esphome.const import CONF_ID, CONF_NAME
 
@@ -14,6 +15,7 @@ DDPLightEffect = ddp_ns.class_("DDPLightEffect", LightEffect)
 DDPAddressableLightEffect = ddp_ns.class_(
     "DDPAddressableLightEffect", AddressableLightEffect
 )
+DDPBasicLightEffect = ddp_ns.class_("DDPBasicLightEffect", LightEffect)
 DDPComponent = ddp_ns.class_("DDPComponent", cg.Component)
 
 DDP_SCALING = {
@@ -65,6 +67,18 @@ async def to_code(config):
         cv.Optional(CONF_DDP_SCALING): cv.one_of(*DDP_SCALING, upper=True),
     },
 )
+@register_binary_effect(
+    "basic_ddp",
+    DDPBasicLightEffect,
+    "Basic DDP",
+    {
+        cv.GenerateID(CONF_DDP_ID): cv.use_id(DDPComponent),
+        cv.Optional(CONF_DDP_TIMEOUT): cv.positive_time_period_milliseconds,
+        cv.Optional(CONF_DDP_DIS_GAMMA): cv.boolean,
+        cv.Optional(CONF_DDP_SCALING): cv.one_of(*DDP_SCALING, upper=True),
+    }
+)
+
 async def ddp_light_effect_to_code(config, effect_id):
     parent = await cg.get_variable(config[CONF_DDP_ID])
 
