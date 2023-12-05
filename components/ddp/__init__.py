@@ -74,8 +74,6 @@ async def to_code(config):
     {
         cv.GenerateID(CONF_DDP_ID): cv.use_id(DDPComponent),
         cv.Optional(CONF_DDP_TIMEOUT): cv.positive_time_period_milliseconds,
-        cv.Optional(CONF_DDP_DIS_GAMMA): cv.boolean,
-        cv.Optional(CONF_DDP_SCALING): cv.one_of(*DDP_SCALING, upper=True),
     }
 )
 

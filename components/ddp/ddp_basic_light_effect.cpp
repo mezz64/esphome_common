@@ -88,46 +88,50 @@ uint16_t DDPBasicLightEffect::process_(const uint8_t *payload, uint16_t size, ui
   float green = (float)payload[used+1]/255.0f;
   float blue  = (float)payload[used+2]/255.0f;
 
-  float multiplier = this->state_->remote_values.get_brightness();
-  float max_val = 0;
+  // float multiplier = this->state_->remote_values.get_brightness();
+  // float max_val = 0;
 
-  // for DDP_PACKET mode, find largest r,g, or b value in packet and scale that value to brightness
-  if ( this->scaling_mode_ == DDP_SCALE_PACKET ) {
-    // find largest rgb value in packet
-    uint8_t packet_max = 0;
-    for ( int i = 10; i < size; i++ ) {
-      if ( payload[i] > packet_max ) { packet_max = payload[i]; }
-    }
-    max_val = (float)packet_max / 255.0f;
-  }
+  // // for DDP_PACKET mode, find largest r,g, or b value in packet and scale that value to brightness
+  // if ( this->scaling_mode_ == DDP_SCALE_PACKET ) {
+  //   // find largest rgb value in packet
+  //   uint8_t packet_max = 0;
+  //   for ( int i = 10; i < size; i++ ) {
+  //     if ( payload[i] > packet_max ) { packet_max = payload[i]; }
+  //   }
+  //   max_val = (float)packet_max / 255.0f;
+  // }
 
-  // DDP_PIXEL and DDP_STRIP are the same with bulbs since a "strip" is one pixel.
-  if ( (this->scaling_mode_ == DDP_SCALE_STRIP) || (this->scaling_mode_ == DDP_SCALE_PIXEL)) {
-    if ( (red >= green) && (red >= blue ) ) { max_val = red;   }
-    else if             ( green >= blue )   { max_val = green; }
-    else                                    { max_val = blue;  }
-  }
+  // // DDP_PIXEL and DDP_STRIP are the same with bulbs since a "strip" is one pixel.
+  // if ( (this->scaling_mode_ == DDP_SCALE_STRIP) || (this->scaling_mode_ == DDP_SCALE_PIXEL)) {
+  //   if ( (red >= green) && (red >= blue ) ) { max_val = red;   }
+  //   else if             ( green >= blue )   { max_val = green; }
+  //   else                                    { max_val = blue;  }
+  // }
 
-  // if we got a max_val, update multiplier
-  if ( max_val != 0 ) { multiplier /= max_val; }
+  // // if we got a max_val, update multiplier
+  // if ( max_val != 0 ) { multiplier /= max_val; }
 
-  // if we are in any scaling mode, multiply the pixel rgb values by the multiplier.
-  if ( this->scaling_mode_ != DDP_NO_SCALING) {
-    red   *= multiplier;
-    green *= multiplier;
-    blue  *= multiplier;
-  }
+  // // if we are in any scaling mode, multiply the pixel rgb values by the multiplier.
+  // if ( this->scaling_mode_ != DDP_NO_SCALING) {
+  //   red   *= multiplier;
+  //   green *= multiplier;
+  //   blue  *= multiplier;
+  // }
 
   ESP_LOGV(TAG, "Final RGB data for '%s->%s': (%02x,%02x,%02x)", this->state_->get_name().c_str(), this->get_name().c_str(), red, green, blue);
 
   // We can only turn on/off, so if we have white (255,255,255) we go on, anything less is off
   if ( (red+green+blue) == 3 ) {
     auto call = this->state_->turn_on();
+    call.set_color_mode_if_supported(light::ColorMode::ON_OFF);
+    call.set_transition_length_if_supported(0);
     call.set_publish(false);
     call.set_save(false);
     call.perform();
   } else {
     auto call = this->state_->turn_off();
+    call.set_color_mode_if_supported(light::ColorMode::ON_OFF);
+    call.set_transition_length_if_supported(0);
     call.set_publish(false);
     call.set_save(false);
     call.perform();
