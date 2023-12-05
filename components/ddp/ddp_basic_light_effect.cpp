@@ -123,8 +123,14 @@ uint16_t DDPBasicLightEffect::process_(const uint8_t *payload, uint16_t size, ui
   // We can only turn on/off, so if we have white (255,255,255) we go on, anything less is off
   if ( (red+green+blue) == 3 ) {
     auto call = this->state_->turn_on();
+    call.set_publish(false);
+    call.set_save(false);
+    call.perform();
   } else {
     auto call = this->state_->turn_off();
+    call.set_publish(false);
+    call.set_save(false);
+    call.perform();
   }
 
   // auto call = this->state_->turn_on();
@@ -145,10 +151,7 @@ uint16_t DDPBasicLightEffect::process_(const uint8_t *payload, uint16_t size, ui
   // call.set_warm_white_if_supported(0.0f);
 
   // call.set_transition_length_if_supported(0);
-  call.set_publish(false);
-  call.set_save(false);
-
-  call.perform();
+  
 
   // manually calling loop otherwise we just go straight into processing the next DDP
   // packet without executing the light loop to display the just-processed packet.
