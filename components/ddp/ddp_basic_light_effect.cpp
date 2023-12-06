@@ -66,14 +66,16 @@ uint16_t DDPBasicLightEffect::process_(const uint8_t *payload, uint16_t size, ui
   // We can only turn on/off, so if we have white (255,255,255) we go on, anything less is off
   auto call = this->state_->turn_on();
 
-  if ( (red + green + blue) == 3 ) {
-    call.set_brightness(255.0f);
-    call.set_state(true);
-  } else {
+  if ( (red + green + blue) < 3 ) {
     call.set_brightness(0.0f);
-    call.set_state(true);
-  }
+    // call.set_brightness(255.0f);
+  } 
+  // else 
+  // {
+  //   call.set_brightness(0.0f);
+  // }
 
+  call.set_state(true);
   call.set_color_mode_if_supported(light::ColorMode::ON_OFF);
   call.set_transition_length_if_supported(0);
   call.set_publish(false);
