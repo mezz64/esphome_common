@@ -34,14 +34,14 @@ void DDPBasicLightEffect::apply() {
     ESP_LOGD(TAG,"DDP stream for '%s->%s' timed out.", this->state_->get_name().c_str(), this->get_name().c_str());
     this->next_packet_will_be_first_ = true;
 
-    auto call = this->state_->turn_on();
+    // auto call = this->state_->turn_on();
 
-    call.set_publish(false);
-    call.set_save(false);
+    // call.set_publish(false);
+    // call.set_save(false);
 
-    // restore backed up gamma value
-    // this->state_->set_gamma_correct(this->gamma_backup_);
-    call.perform();
+    // // restore backed up gamma value
+    // // this->state_->set_gamma_correct(this->gamma_backup_);
+    // call.perform();
    }
 
 }
