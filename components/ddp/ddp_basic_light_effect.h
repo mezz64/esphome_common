@@ -22,6 +22,8 @@ class DDPBasicLightEffect : public DDPLightEffectBase, public light::LightEffect
 
  protected:
   uint16_t process_(const uint8_t *payload, uint16_t size, uint16_t used) override;
+  bool bddp_start_{false};
+
 };
 
 }  // namespace ddp
