@@ -17,6 +17,14 @@ void DDPBasicLightEffect::start() {
 
   LightEffect::start();
   DDPLightEffectBase::start();
+  
+  //Start in an off state when basic ddp enabled
+  auto call = this->state_->turn_on();
+  call.set_brightness(0.0f);
+  call.set_state(true);
+  call.set_publish(false);
+  call.set_save(false);
+  call.perform();
 }
 
 void DDPBasicLightEffect::stop() {
